@@ -24,16 +24,16 @@ public class UserService implements UserDetailsService {
 
     public ResponseService saveUser(UserEntity inputUser) {
         ResponseService responseObj = new ResponseService();
-        Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
+        Optional<UserEntity> optUser = userRepo.findByUserName(inputUser.getUserName());
         if (optUser.isPresent()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("Email address " + inputUser.getEmail() + " existed");
+            responseObj.setMessage("UserName address " + inputUser.getUserName() + " existed");
             responseObj.setPayload(null);
             return responseObj;
         } else {
             inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
             UserEntity user = userRepo.save(inputUser);
-            responseObj.setPayload(user.getEmail());
+            responseObj.setPayload(user.getUserName());
             responseObj.setStatus("success");
             responseObj.setMessage("success");
             return responseObj;

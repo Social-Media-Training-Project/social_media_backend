@@ -43,10 +43,12 @@ public class UserController {
     @PostMapping("/users/signin")
     public ResponseEntity<ResponseService> userSignIn(@RequestBody UserSignInEntity inputUser) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getUsername(), inputUser.getPassword()));
-            String token = jwtUtil.generateToken(inputUser.getUsername());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getUserName(), inputUser.getPassword()));
+
+        	System.out.println("Hello " + inputUser.getUserName() + " " + inputUser.getPassword());
+            String token = jwtUtil.generateToken(inputUser.getUserName());
             
-            Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getUsername());
+            Optional<UserEntity> optUser = userRepo.findByUserName(inputUser.getUserName());
             UserEntity user = optUser.get();
             user.setPassword("");
             return new ResponseEntity<ResponseService>(new ResponseService("success", "authenticated", new AuthEntity(user, token)), HttpStatus.OK);
