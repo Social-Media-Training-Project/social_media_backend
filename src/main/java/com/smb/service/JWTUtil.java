@@ -17,7 +17,7 @@ public class JWTUtil {
     private String secretKey;
     
 	public String generateToken(String subject) {
-	return Jwts
+		return Jwts
         		.builder()
         		.setIssuer("SMB")
         		.setSubject(subject)
