@@ -1,5 +1,6 @@
 package com.smb.controller;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class UserController {
     @Autowired
     private UserRepo userRepo;
     
+    
     @PostMapping("/users/save")
     public ResponseEntity<ResponseService> saveUser(@RequestBody UserEntity inputUser) {
         return new ResponseEntity<ResponseService>(userService.saveUser(inputUser), HttpStatus.OK);
@@ -44,17 +46,14 @@ public class UserController {
     public ResponseEntity<ResponseService> userSignIn(@RequestBody UserSignInEntity inputUser) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getUserName(), inputUser.getPassword()));
-
-        	System.out.println("Hello " + inputUser.getUserName() + " " + inputUser.getPassword());
             String token = jwtUtil.generateToken(inputUser.getUserName());
-            
             Optional<UserEntity> optUser = userRepo.findByUserName(inputUser.getUserName());
             UserEntity user = optUser.get();
             user.setPassword("");
             return new ResponseEntity<ResponseService>(new ResponseService("success", "authenticated", new AuthEntity(user, token)), HttpStatus.OK);
         } catch (Exception ex) {
+        	System.out.print(ex);
             return new ResponseEntity<ResponseService>(new ResponseService("fail", "unauthenticated", null), HttpStatus.OK);
         }
     }
-
 }

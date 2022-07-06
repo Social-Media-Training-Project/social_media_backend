@@ -14,6 +14,7 @@ public class UserEntity {
 	private String lastName;
 	private String userName;
 	private String password;
+	private String role;
 //	private List<String> following = new ArrayList<>();
 //	private List<String> follower = new ArrayList<>();
 	
@@ -40,6 +41,13 @@ public class UserEntity {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	public UserEntity(String id, String firstName, String lastName, String userName, String password) {
 		super();
