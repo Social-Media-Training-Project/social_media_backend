@@ -29,8 +29,6 @@ public class UserService {
             return responseObj;
         } else {
             inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
-
-            // user follows himself so he could get his posts in newsfeed as well
             UserEntity user = userRepo.save(inputUser);
             responseObj.setPayload(user.getEmail());
             responseObj.setStatus("success");
