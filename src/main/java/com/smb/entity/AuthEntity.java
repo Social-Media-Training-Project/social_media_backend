@@ -8,7 +8,13 @@ public class AuthEntity {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public AuthEntity(UserEntity user, String token) {
+		super();
+		this.user = user;
+		this.token = token;
+	}
+
+	public void setUser(UserEntity user) {
         this.user = user;
     }
 
