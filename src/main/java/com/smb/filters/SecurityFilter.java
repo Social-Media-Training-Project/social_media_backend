@@ -31,12 +31,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         // read token from authorization header
         String token = request.getHeader("Authorization");
         if (token != null) {
-            String userEmail = util.getSubject(token);
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails user = userDetailsService.loadUserByUsername(userEmail);
+            String userName = util.getSubject(token);
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails user = userDetailsService.loadUserByUsername(userName);
                 boolean isValid = util.isValidToken(token, user.getUsername());
                 if (isValid) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userEmail, user.getPassword(), user.getAuthorities());
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userName, user.getPassword(), user.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }

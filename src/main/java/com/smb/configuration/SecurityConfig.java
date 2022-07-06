@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityFilter secFilter;
 
     // required for stateless authentication
-    @Override
+	@Override
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
@@ -41,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/api/v1/users/save", "/api/v1/users/signin").permitAll()
-                .antMatchers("/api/v1/getdata").hasAuthority("user")
+        http.csrf().disable().authorizeRequests().antMatchers("/api/users/save", "/api/users/signin").permitAll()
+                .antMatchers("/api/getdata").hasAuthority("user")
                 .anyRequest().authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
