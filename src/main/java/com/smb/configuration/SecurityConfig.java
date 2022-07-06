@@ -27,7 +27,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityFilter secFilter;
 
-    // required for stateless authentication
 	@Override
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
