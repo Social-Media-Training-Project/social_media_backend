@@ -52,7 +52,6 @@ public class UserController {
             user.setPassword("");
             return new ResponseEntity<ResponseService>(new ResponseService("success", "authenticated", new AuthEntity(user, token)), HttpStatus.OK);
         } catch (Exception ex) {
-        	System.out.print(ex);
             return new ResponseEntity<ResponseService>(new ResponseService("fail", "unauthenticated", null), HttpStatus.OK);
         }
     }
