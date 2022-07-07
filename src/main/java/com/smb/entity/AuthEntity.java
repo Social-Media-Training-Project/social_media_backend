@@ -3,7 +3,8 @@ package com.smb.entity;
 
 public class AuthEntity {
     private UserEntity user;
-
+    private String token;
+    
     public UserEntity getUser() {
         return user;
     }
@@ -18,5 +19,14 @@ public class AuthEntity {
         this.user = user;
     }
 
-    private String token;
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
+
 }
