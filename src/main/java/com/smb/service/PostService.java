@@ -111,7 +111,7 @@ public class PostService {
             }
             // save id of user who shared the post then update post
             shareList.add(doubleId.getId2());
-            //targetPost.setShare(shareList);
+            targetPost.setShare(shareList);
             postRepo.save(targetPost);
              //update post list of user who shared the post
             targetPost.setUserId(doubleId.getId2());
