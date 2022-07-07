@@ -8,6 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "user")
 public class UserEntity {
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	@Id
 	private String id;
 	private String firstName;
@@ -18,8 +24,16 @@ public class UserEntity {
 //	private List<String> following = new ArrayList<>();
 //	private List<String> follower = new ArrayList<>();
 	
+	
+	
 	public String getFirstName() {
 		return firstName;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
