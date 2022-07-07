@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -42,22 +43,21 @@ public class UserService implements UserDetailsService {
             responseObj.setStatus("fail");
             responseObj.setMessage("UserName address " + inputUser.getUserName() + " existed");
             responseObj.setPayload(null);
-            return responseObj;
         } else {
             inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
             UserEntity user = userRepo.save(inputUser);
-            List<String> following = user.getFollowing();
-            if (following.isEmpty()) {
-                following = new ArrayList<>();
+            List<String> fans = user.getFans();
+            if (fans.isEmpty()) {
+                fans = new ArrayList<>();
             }
-            following.add(user.getId());
-            user.setFollowing(following);
+            fans.add(user.getId());
+            user.setFans(fans);
             userRepo.save(user);
             responseObj.setPayload(user.getUserName());
             responseObj.setStatus("success");
             responseObj.setMessage("success");
-            return responseObj;
         }
+        return responseObj;
     }
     
     public ResponseService findAll() {
@@ -111,60 +111,57 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseService followUser(DoubleIdObjectEntity doubleId) {
-        // id1 - followed user, id2 - follower
 
         ResponseService responseObj = new ResponseService();
-        Optional<UserEntity> optId1User = userRepo.findById(doubleId.getId1());
-        Optional<UserEntity> optId2User = userRepo.findById(doubleId.getId2());
-        if (optId1User.isEmpty() || optId2User.isEmpty()) {
+        Optional<UserEntity> optOtherAccUser = userRepo.findById(doubleId.getOtherAcc());
+        Optional<UserEntity> optThisAccUser = userRepo.findById(doubleId.getThisAcc());
+        if (optOtherAccUser.isEmpty() || optThisAccUser.isEmpty()) {
             responseObj.setStatus("fail");
             responseObj.setMessage("invalid user id");
             responseObj.setPayload(null);
         } else {
-            UserEntity id1User = optId1User.get();
-            UserEntity id2User = optId2User.get();
+            UserEntity otherAccUser = optOtherAccUser.get();
+            UserEntity thisAccUser = optThisAccUser.get();
 
-            // add to following list and to feed of the user which was followed by current user
-            List<String> followerList = id1User.getFollower();
-            if (followerList == null) {
-                followerList = new ArrayList<>();
+            // update gods list and feed of the user, which was followed by current user
+            List<String> godsList = thisAccUser.getGods();
+            if (godsList == null) {
+                godsList = new ArrayList<>();
             }
-            followerList.add(id2User.getId());
-            id1User.setFollower(followerList);
+            godsList.add(otherAccUser.getId());
+            thisAccUser.setGods(godsList.stream().distinct().collect(Collectors.toList()));
 
-            // add to following list and to feed of current user
-            List<String> followingList = id2User.getFollowing();
-            if (followingList == null) {
-                followingList = new ArrayList<>();
-            }
-            followingList.add(id1User.getId());
-            id1User.setFollowing(followingList);
-
-            List<String> id2Feed = id2User.getUserFeed();
-            if (id2Feed == null) {
-                id2Feed = new ArrayList<>();
+            List<String> thisAccFeed = thisAccUser.getUserFeed();
+            if (thisAccFeed == null) {
+                thisAccFeed = new ArrayList<>();
             }
 
-            Optional<List<PostEntity>> id1Posts = postRepo.findByUserIdOrderByCreatedAtDesc(doubleId.getId1());
-            if (!id1Posts.isEmpty()) {
-                List<String> finalId2Feed = id2Feed;
-                id1Posts.get().forEach(postEntity -> {
-                    finalId2Feed.add(postEntity.getId());
+            Optional<List<PostEntity>> otherAccPosts = postRepo.findByUserIdOrderByCreatedAtDesc(doubleId.getOtherAcc());
+            if (!otherAccPosts.isEmpty()) {
+                List<String> finalThisAccFeed = thisAccFeed;
+                otherAccPosts.get().forEach(postEntity -> {
+                    finalThisAccFeed.add(postEntity.getId());
                 });
-                id2User.setUserFeed(finalId2Feed);
+                thisAccUser.setUserFeed(finalThisAccFeed.stream().distinct().collect(Collectors.toList()));
             }
-            /* Todo: Follower
 
-             */
+            // update fans list of other user
+            List<String> fansList = otherAccUser.getFans();
+            if (fansList == null) {
+                fansList = new ArrayList<>();
+            }
+            fansList.add(thisAccUser.getId());
+            otherAccUser.setFans(fansList.stream().distinct().collect(Collectors.toList()));
 
-            userRepo.save(id1User);
-            userRepo.save(id2User);
+
+            userRepo.save(otherAccUser);
+            userRepo.save(thisAccUser);
 
 
             responseObj.setStatus("success");
             responseObj.setMessage(
-                    "User id " + id2User.getId() + " successfully followed user id " + id1User.getId());
-            responseObj.setPayload(new IdObjectEntity(doubleId.getId1()));
+                    "User id " + thisAccUser.getId() + " successfully followed user id " + otherAccUser.getId());
+            responseObj.setPayload(new IdObjectEntity(doubleId.getOtherAcc()));
         }
         return responseObj;
     }

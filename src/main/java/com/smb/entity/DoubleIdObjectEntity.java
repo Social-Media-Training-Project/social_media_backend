@@ -1,28 +1,28 @@
 package com.smb.entity;
 
 public class DoubleIdObjectEntity {
-	private String id1;
-	private String id2;
+	private String otherAcc;
+	private String thisAcc;
 	
-	public DoubleIdObjectEntity(String id1,String id2) {
+	public DoubleIdObjectEntity(String otherAcc,String thisAcc) {
 		super();
-		this.id1=id1;
-		this.id2=id2;
+		this.otherAcc=otherAcc;
+		this.thisAcc=thisAcc;
 	}
 	public DoubleIdObjectEntity() {
 		super();
 	}
-	public String getId1() {
-		return id1;
+	public String getOtherAcc() {
+		return otherAcc;
 	}
-	public void setId1(String id1) {
-		this.id1=id1;
+	public void setOtherAcc(String otherAcc) {
+		this.otherAcc=otherAcc;
 	}
-	public String getId2() {
-		return id2;
+	public String getThisAcc() {
+		return thisAcc;
 	}
-	public void setId2(String id2) {
-		this.id2 = id2;
+	public void setThisAcc(String thisAcc) {
+		this.thisAcc = thisAcc;
 	}
 	
 }
