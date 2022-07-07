@@ -1,6 +1,5 @@
 package com.smb.controller;
 
-import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smb.entity.AuthEntity;
+import com.smb.entity.IdObjectEntity;
 import com.smb.entity.UserEntity;
 import com.smb.entity.UserSignInEntity;
 import com.smb.repo.UserRepo;
@@ -62,4 +63,10 @@ public class UserController {
             return new ResponseEntity<ResponseService>(new ResponseService("fail", "unauthenticated", null), HttpStatus.OK);
         }
     }
+    
+    @GetMapping("/users/profile/{inputId}")
+    public ResponseEntity<ResponseService> findById(@PathVariable("inputId") String inputId) {
+        return new ResponseEntity<ResponseService>(userService.findById(inputId), HttpStatus.OK);
+    }
+
 }
