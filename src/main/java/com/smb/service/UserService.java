@@ -86,7 +86,9 @@ public class UserService implements UserDetailsService {
             responseObj.setPayload(null);
             return responseObj;
         } else {
-            responseObj.setPayload(optUser.get());
+        	UserEntity user = optUser.get();
+        	user.setPassword("");
+            responseObj.setPayload(user);
             responseObj.setStatus("success");
             responseObj.setMessage("success");
             return responseObj;

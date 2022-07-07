@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,9 +64,9 @@ public class UserController {
         }
     }
     
-    @PostMapping("/users/profile")
-    public ResponseEntity<ResponseService> findById(@RequestBody IdObjectEntity inputId) {
-        return new ResponseEntity<ResponseService>(userService.findById(inputId.getId()), HttpStatus.OK);
+    @GetMapping("/users/profile/{inputId}")
+    public ResponseEntity<ResponseService> findById(@PathVariable("inputId") String inputId) {
+        return new ResponseEntity<ResponseService>(userService.findById(inputId), HttpStatus.OK);
     }
 
 }
