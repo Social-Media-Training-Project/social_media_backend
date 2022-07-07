@@ -20,4 +20,17 @@ public class UserSignInEntity {
         this.password = password;
     }
 
+	public UserSignInEntity(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+
+	public UserSignInEntity() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+    
+    
+
 }

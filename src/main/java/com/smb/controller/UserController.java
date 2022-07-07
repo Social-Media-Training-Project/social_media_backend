@@ -1,5 +1,6 @@
 package com.smb.controller;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,13 @@ public class UserController {
     @Autowired
     private UserRepo userRepo;
     
+    
+    @GetMapping("/users")
+    public ResponseEntity<ResponseService> findAllUsers() {
+        return new ResponseEntity<ResponseService>(userService.findAll(), HttpStatus.OK);
+    }
+    
+    
     @PostMapping("/users/save")
     public ResponseEntity<ResponseService> saveUser(@RequestBody UserEntity inputUser) {
         return new ResponseEntity<ResponseService>(userService.saveUser(inputUser), HttpStatus.OK);
@@ -44,10 +53,7 @@ public class UserController {
     public ResponseEntity<ResponseService> userSignIn(@RequestBody UserSignInEntity inputUser) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getUserName(), inputUser.getPassword()));
-
-        	System.out.println("Hello " + inputUser.getUserName() + " " + inputUser.getPassword());
             String token = jwtUtil.generateToken(inputUser.getUserName());
-            
             Optional<UserEntity> optUser = userRepo.findByUserName(inputUser.getUserName());
             UserEntity user = optUser.get();
             user.setPassword("");
@@ -56,5 +62,4 @@ public class UserController {
             return new ResponseEntity<ResponseService>(new ResponseService("fail", "unauthenticated", null), HttpStatus.OK);
         }
     }
-
 }
