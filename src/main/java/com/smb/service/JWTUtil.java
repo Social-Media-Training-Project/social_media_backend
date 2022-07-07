@@ -30,7 +30,6 @@ public class JWTUtil {
     }
 	
 	public Claims getClaims(String token) {
-    	System.out.println("JSON:- " + token);
     	String[] splited = token.split("\\s+");
     	token = splited[1];
         return Jwts.parser().setSigningKey(Base64.getEncoder().encode(secretKey.getBytes())).parseClaimsJws(token).getBody();

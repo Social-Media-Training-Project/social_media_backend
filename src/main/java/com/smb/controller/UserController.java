@@ -71,4 +71,9 @@ public class UserController {
         return new ResponseEntity<ResponseService>(userService.followUser(doubleId), HttpStatus.OK);
     }
 
+    @PostMapping("/users/unfollow")
+    public ResponseEntity<ResponseService> unfollowUser(@RequestBody DoubleIdObjectEntity doubleId) {
+        return new ResponseEntity<ResponseService>(userService.unfollowUser(doubleId), HttpStatus.OK);
+    }
+
 }
