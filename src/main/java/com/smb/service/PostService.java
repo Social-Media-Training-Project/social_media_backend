@@ -53,8 +53,6 @@ public class PostService {
             responseObj.setPayload(newPost);
         }
         return responseObj;
-
-
     }
     
     public ResponseService findPostByUserId(IdObjectEntity inputUserId) {

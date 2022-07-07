@@ -166,5 +166,61 @@ public class UserService implements UserDetailsService {
         return responseObj;
     }
 
+    public ResponseService unfollowUser(DoubleIdObjectEntity doubleId) {
+
+        ResponseService responseObj = new ResponseService();
+        Optional<UserEntity> optOtherAccUser = userRepo.findById(doubleId.getOtherAcc());
+        Optional<UserEntity> optThisAccUser = userRepo.findById(doubleId.getThisAcc());
+        if (optOtherAccUser.isEmpty() || optThisAccUser.isEmpty() || doubleId.getThisAcc().equals(doubleId.getOtherAcc())) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("invalid user id");
+            responseObj.setPayload(null);
+        } else {
+            UserEntity otherAccUser = optOtherAccUser.get();
+            UserEntity thisAccUser = optThisAccUser.get();
+
+            // update gods list and feed of the user, which was followed by current user
+            List<String> godsList = thisAccUser.getGods();
+            if (godsList == null) {
+                godsList = new ArrayList<>();
+            }
+            godsList.remove(otherAccUser.getId());
+            thisAccUser.setGods(godsList);
+
+            List<String> thisAccFeed = thisAccUser.getUserFeed();
+            if (thisAccFeed == null) {
+                thisAccFeed = new ArrayList<>();
+            }
+            Optional<List<PostEntity>> otherAccPosts = postRepo.findByUserIdOrderByCreatedAtDesc(doubleId.getOtherAcc());
+            if (!otherAccPosts.isEmpty()) {
+                List<String> finalThisAccFeed = thisAccFeed;
+                otherAccPosts.get().forEach(postEntity -> {
+                    finalThisAccFeed.remove(postEntity.getId());
+                });
+                thisAccUser.setUserFeed(finalThisAccFeed);
+            }
+
+            // update fans list of other user
+            List<String> fansList = otherAccUser.getFans();
+            if (fansList == null) {
+                fansList = new ArrayList<>();
+            }
+            fansList.remove(thisAccUser.getId());
+            otherAccUser.setFans(fansList);
+
+
+            userRepo.save(otherAccUser);
+            userRepo.save(thisAccUser);
+
+
+            responseObj.setStatus("success");
+            responseObj.setMessage(
+                    "User id " + thisAccUser.getId() + " successfully UNfollowed user id " + otherAccUser.getId());
+            responseObj.setPayload(new IdObjectEntity(doubleId.getOtherAcc()));
+        }
+        return responseObj;
+    }
+
+
 
 }
