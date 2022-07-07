@@ -113,13 +113,13 @@ public class PostService {
             shareList.add(doubleId.getId2());
             //targetPost.setShare(shareList);
             postRepo.save(targetPost);
-            // update post list of user who shared the post
-            //targetPost.setUserId(doubleId.getId2());
-            //targetPost.setId(null);
-            //targetPost.setContent("Shared a post: " + targetPost.getContent());
-//            targetPost.setLove(new ArrayList<>());
-//            targetPost.setShare(new ArrayList<>());
-//            targetPost.setComment(new ArrayList<>());
+             //update post list of user who shared the post
+            targetPost.setUserId(doubleId.getId2());
+            targetPost.setId(null);
+            targetPost.setContent("Shared a post: " + targetPost.getContent());
+            targetPost.setLove(new ArrayList<>());
+            targetPost.setShare(new ArrayList<>());
+            targetPost.setComment(new ArrayList<>());
             postRepo.save(targetPost);
 
             responseObj.setStatus("success");
