@@ -44,6 +44,20 @@ public class UserService implements UserDetailsService {
             return responseObj;
         }
     }
+    
+    public ResponseService findAll() {
+        ResponseService responseObj = new ResponseService();
+        List<UserEntity> users = userRepo.findAll();
+        
+//        users.stream().forEach( user -> {
+//        	user.setPassword("");
+//        });
+        
+        responseObj.setPayload(users);
+        responseObj.setStatus("success");
+        responseObj.setMessage("success");
+        return responseObj;
+    }
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
