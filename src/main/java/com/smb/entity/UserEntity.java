@@ -18,8 +18,16 @@ public class UserEntity {
 //	private List<String> following = new ArrayList<>();
 //	private List<String> follower = new ArrayList<>();
 	
+	
+	
 	public String getFirstName() {
 		return firstName;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
