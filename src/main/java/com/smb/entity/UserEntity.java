@@ -8,12 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "user")
 public class UserEntity {
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	@Id
 	private String id;
 	private String firstName;
@@ -21,8 +15,8 @@ public class UserEntity {
 	private String userName;
 	private String password;
 	private String role;
-//	private List<String> following = new ArrayList<>();
-//	private List<String> follower = new ArrayList<>();
+	private List<String> following = new ArrayList<>();
+	private List<String> follower = new ArrayList<>();
 	
 	
 	
@@ -63,13 +57,30 @@ public class UserEntity {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public UserEntity(String id, String firstName, String lastName, String userName, String password) {
+	
+	public List<String> getFollowing() {
+		return following;
+	}
+	public void setFollowing(List<String> following) {
+		this.following = following;
+	}
+	public List<String> getFollower() {
+		return follower;
+	}
+	public void setFollower(List<String> follower) {
+		this.follower = follower;
+	}
+	public UserEntity(String id, String firstName, String lastName, String userName, String password, String role,
+			List<String> following, List<String> follower) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
 		this.password = password;
+		this.role = role;
+		this.following = following;
+		this.follower = follower;
 	}
 	public UserEntity() {
 		super();
