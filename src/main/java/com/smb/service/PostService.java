@@ -35,14 +35,22 @@ public class PostService {
             return responseObj;
     	}
     	else {
+    		PostEntity newPost = postRepo.save(inputPost);
     		List<String> followers =  optUser.get().getFollower();
+    		List<UserEntity> users = (List<UserEntity>) userRepo.findAllById(followers);
     		
-    		userRepo.findAllById(followers);
+    		users.forEach(user -> {
+    			List<String> userFeed = user.getUserFeed();
+    			userFeed.add(newPost.getId());
+    			user.setUserFeed(userFeed);
+    		});
+    		
+    		userRepo.saveAll(users);
     		
     		inputPost.setCreatedAt(Instant.now());
             responseObj.setStatus("success");
             responseObj.setMessage("success");
-            responseObj.setPayload(postRepo.save(inputPost));
+            responseObj.setPayload(newPost);
             return responseObj;
     	}
     	
@@ -130,7 +138,7 @@ public class PostService {
             }
             // save id of user who shared the post then update post
             shareList.add(doubleId.getId2());
-            targetPost.setShare(shareList);
+            //targetPost.setShare(shareList);
             postRepo.save(targetPost);
              //update post list of user who shared the post
             targetPost.setUserId(doubleId.getId2());
