@@ -62,4 +62,20 @@ public class UserService implements UserDetailsService {
         }
 		
 	}
+	
+	public ResponseService findById(String id) {
+        ResponseService responseObj = new ResponseService();
+        Optional<UserEntity> optUser = userRepo.findById(id);
+        if (optUser.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user id: " + id + " not existed");
+            responseObj.setPayload(null);
+            return responseObj;
+        } else {
+            responseObj.setPayload(optUser.get());
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            return responseObj;
+        }
+    }
 }

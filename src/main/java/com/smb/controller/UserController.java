@@ -1,6 +1,5 @@
 package com.smb.controller;
 
-import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smb.entity.AuthEntity;
+import com.smb.entity.IdObjectEntity;
 import com.smb.entity.UserEntity;
 import com.smb.entity.UserSignInEntity;
 import com.smb.repo.UserRepo;
@@ -55,4 +55,10 @@ public class UserController {
             return new ResponseEntity<ResponseService>(new ResponseService("fail", "unauthenticated", null), HttpStatus.OK);
         }
     }
+    
+    @PostMapping("/users/profile")
+    public ResponseEntity<ResponseService> findById(@RequestBody IdObjectEntity inputId) {
+        return new ResponseEntity<ResponseService>(userService.findById(inputId.getId()), HttpStatus.OK);
+    }
+
 }
