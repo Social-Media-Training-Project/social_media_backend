@@ -29,6 +29,7 @@ public class PostController {
     public ResponseEntity<ResponseService> findPostByUserId(@RequestBody IdObjectEntity inputUserId) {
         return new ResponseEntity<ResponseService>(postService.findPostByUserId(inputUserId), HttpStatus.OK);
     }
+ 
     @PostMapping("/users/lovepost")
     public ResponseEntity<ResponseService> lovePost(@RequestBody DoubleIdObjectEntity doubleId) {
         return new ResponseEntity<ResponseService>(postService.updatePostByLove(doubleId), HttpStatus.OK);

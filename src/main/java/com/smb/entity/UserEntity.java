@@ -17,7 +17,8 @@ public class UserEntity {
 	private String role;
 	private List<String> following = new ArrayList<>();
 	private List<String> follower = new ArrayList<>();
-	
+	private	List<String> userFeed = new ArrayList<>();
+
 	
 	
 	public String getFirstName() {
@@ -70,9 +71,16 @@ public class UserEntity {
 	public void setFollower(List<String> follower) {
 		this.follower = follower;
 	}
-	public UserEntity(String id, String firstName, String lastName, String userName, String password, String role,
-			List<String> following, List<String> follower) {
-		super();
+
+	public List<String> getUserFeed() {
+		return userFeed;
+	}
+
+	public void setUserFeed(List<String> userFeed) {
+		this.userFeed = userFeed;
+	}
+
+	public UserEntity(String id, String firstName, String lastName, String userName, String password, String role, List<String> following, List<String> follower, List<String> userfeed) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -81,12 +89,12 @@ public class UserEntity {
 		this.role = role;
 		this.following = following;
 		this.follower = follower;
+		this.userFeed = userFeed;
 	}
+
 	public UserEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
+
 }
