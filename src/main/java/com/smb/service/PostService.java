@@ -24,12 +24,31 @@ public class PostService {
     private UserRepo userRepo;
     
     public ResponseService insertPost(PostEntity inputPost) {
-        ResponseService responseObj = new ResponseService();
-        inputPost.setCreatedAt(Instant.now());
-        responseObj.setStatus("success");
-        responseObj.setMessage("success");
-        responseObj.setPayload(postRepo.save(inputPost));
-        return responseObj;
+    	
+    	ResponseService responseObj = new ResponseService();
+    	Optional<UserEntity> optUser = userRepo.findById(inputPost.getUserId());
+    	
+    	if(optUser.isEmpty()) {
+    		responseObj.setStatus("fail");
+            responseObj.setMessage("fail");
+            responseObj.setPayload(null);
+            return responseObj;
+    	}
+    	else {
+    		List<String> followers =  optUser.get().getFollower();
+    		
+    		userRepo.findAllById(followers);
+    		
+    		inputPost.setCreatedAt(Instant.now());
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(postRepo.save(inputPost));
+            return responseObj;
+    	}
+    	
+    	
+        
+        
     }
     
     public ResponseService findPostByUserId(IdObjectEntity inputUserId) {
