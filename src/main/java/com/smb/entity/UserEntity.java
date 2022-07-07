@@ -15,8 +15,8 @@ public class UserEntity {
 	private String userName;
 	private String password;
 	private String role;
-	private List<String> following = new ArrayList<>();
-	private List<String> follower = new ArrayList<>();
+	private List<String> gods = new ArrayList<>();
+	private List<String> fans = new ArrayList<>();
 	private	List<String> userFeed = new ArrayList<>();
 
 	
@@ -59,17 +59,17 @@ public class UserEntity {
 		this.role = role;
 	}
 	
-	public List<String> getFollowing() {
-		return following;
+	public List<String> getGods() {
+		return gods;
 	}
-	public void setFollowing(List<String> following) {
-		this.following = following;
+	public void setGods(List<String> gods) {
+		this.gods = gods;
 	}
-	public List<String> getFollower() {
-		return follower;
+	public List<String> getFans() {
+		return fans;
 	}
-	public void setFollower(List<String> follower) {
-		this.follower = follower;
+	public void setFans(List<String> fans) {
+		this.fans = fans;
 	}
 
 	public List<String> getUserFeed() {
@@ -80,15 +80,15 @@ public class UserEntity {
 		this.userFeed = userFeed;
 	}
 
-	public UserEntity(String id, String firstName, String lastName, String userName, String password, String role, List<String> following, List<String> follower, List<String> userfeed) {
+	public UserEntity(String id, String firstName, String lastName, String userName, String password, String role, List<String> gods, List<String> fans, List<String> userfeed) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
 		this.password = password;
 		this.role = role;
-		this.following = following;
-		this.follower = follower;
+		this.gods = gods;
+		this.fans = fans;
 		this.userFeed = userFeed;
 	}
 
