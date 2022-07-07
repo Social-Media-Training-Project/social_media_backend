@@ -173,7 +173,10 @@ public class UserService implements UserDetailsService {
         Optional<UserEntity> optThisAccUser = userRepo.findById(doubleId.getThisAcc());
         if (optOtherAccUser.isEmpty() || optThisAccUser.isEmpty() || doubleId.getThisAcc().equals(doubleId.getOtherAcc())) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("invalid user id");
+            String msg = "invalid user id";
+            if(doubleId.getThisAcc().equals(doubleId.getOtherAcc()))
+            	msg = "cannot unfollow yourself";
+            responseObj.setMessage(msg);
             responseObj.setPayload(null);
         } else {
             UserEntity otherAccUser = optOtherAccUser.get();
