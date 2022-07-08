@@ -83,20 +83,20 @@ public class UserController {
         return new ResponseEntity<ResponseService>(userService.unfollowUser(doubleId), HttpStatus.OK);
     }
     
-    // @GetMapping("/users/feed/{userId}")
-    // public ResponseEntity<ResponseService> getUserFeed(@PathVariable("userId") String userId) {
-    //     return new ResponseEntity<ResponseService>(userService.getUserFeed(userId), HttpStatus.OK);
-    // }
+     @GetMapping("/users/feed/{userId}")
+     public ResponseEntity<ResponseService> getUserFeed(@PathVariable("userId") String userId) {
+         return new ResponseEntity<ResponseService>(userService.getUserFeed(userId), HttpStatus.OK);
+     }
     
-    // @PutMapping("/users")
-    // public ResponseEntity<ResponseService> updateUser(@RequestBody  UserEntity inputUser ){
-    //     return new ResponseEntity<ResponseService>(userService.updateUser(inputUser), HttpStatus.OK);
-    // }
+     @PutMapping("/users")
+     public ResponseEntity<ResponseService> updateUser(@RequestBody  UserEntity inputUser ){
+         return new ResponseEntity<ResponseService>(userService.updateUser(inputUser), HttpStatus.OK);
+     }
     
-    // @DeleteMapping("/users")
-    // public ResponseEntity<ResponseService> deleteUser(@RequestBody UserSignInEntity inputUser ){
-    //     return new ResponseEntity<ResponseService>(userService.deleteUser(inputUser), HttpStatus.OK);
-    // }
+     @DeleteMapping("/users")
+     public ResponseEntity<ResponseService> deleteUser(@RequestBody UserSignInEntity inputUser ){
+         return new ResponseEntity<ResponseService>(userService.deleteUser(inputUser), HttpStatus.OK);
+     }
     
     
 }
