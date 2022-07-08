@@ -12,7 +12,9 @@ import com.smb.entity.CommentEntity;
 import com.smb.entity.PostEntity;
 import com.smb.repo.CommentRepo;
 import com.smb.repo.PostRepo;
-import com.smb.entity.IdObjectEntity;
+
+
+
 @Service
 public class CommentService {
     @Autowired
