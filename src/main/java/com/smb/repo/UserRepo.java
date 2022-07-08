@@ -19,7 +19,7 @@ public interface UserRepo extends MongoRepository<UserEntity, String> {
 //  @Query(value="{ path : ?0}", fields="{ path : 0 }")
 //  List<Foo> findByPath(String path);
     
-    @Query(value="{}", fields="{ _id: 1, firstName : 1, lastName : 1 }")
+    @Query(value="{}", fields="{ _id: 1, firstName : 1, lastName : 1, gods: 1, fans: 1, userFeed: 1 }")
     List<UserEntity> findAll();
     
 }
