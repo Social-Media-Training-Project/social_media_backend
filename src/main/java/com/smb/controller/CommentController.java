@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smb.entity.CommentEntity;
-import com.smb.entity.CommentPostRequestEntity;
 import com.smb.entity.IdObjectEntity;
 import com.smb.service.CommentService;
 import com.smb.service.ResponseService;
@@ -21,14 +20,12 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/users/insertcomment")
-    public ResponseEntity<ResponseService> insertComment(@RequestBody CommentPostRequestEntity postedComment) {
-        CommentEntity inputComment = postedComment.getCommentEntity();
-        IdObjectEntity inputPostId = postedComment.getPostId();
-        return new ResponseEntity<ResponseService>(commentService.insertComment(inputComment, inputPostId.getId()), HttpStatus.OK);
+    public ResponseEntity<ResponseService> insertComment(@RequestBody CommentEntity inputComment) {
+        return new ResponseEntity<ResponseService>(commentService.insertComment(inputComment), HttpStatus.OK);
     }
 
-    @PostMapping("/users/getcomments") 
-    public ResponseEntity<ResponseService> getComments(@RequestBody IdObjectEntity inputPostId) {
-        return new ResponseEntity<ResponseService>(commentService.getComments(inputPostId.getId()), HttpStatus.OK);
+    @PostMapping("/users/getcomments")
+    public ResponseEntity<ResponseService> getCommentss(@RequestBody IdObjectEntity inputPostId) {
+        return new ResponseEntity<ResponseService>(commentService.getComments(inputPostId), HttpStatus.OK);
     }
 }
