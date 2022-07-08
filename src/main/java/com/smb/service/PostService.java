@@ -54,6 +54,40 @@ public class PostService {
         }
         return responseObj;
     }
+
+    
+    public ResponseService deletePost(PostEntity inputPost) {
+    	
+    	ResponseService responseObj = new ResponseService();
+    	Optional<UserEntity> optThisUser = userRepo.findById(inputPost.getUserId());
+    	
+    	if(optThisUser.isEmpty()) {
+    		responseObj.setStatus("fail");
+            responseObj.setMessage("fail");
+            responseObj.setPayload(null);
+        }
+    	else {
+    		PostEntity newPost = postRepo.save(inputPost);
+    		List<String> fansId =  optThisUser.get().getFans();
+    		List<UserEntity> fans = (List<UserEntity>) userRepo.findAllById(fansId);
+    		
+    		fans.forEach(fan -> {
+    			List<String> fanFeed = fan.getUserFeed();
+    			fanFeed.remove(newPost.getId());
+    			fan.setUserFeed(fanFeed.stream().distinct().collect(Collectors.toList()));
+    		});
+    		
+    		postRepo.deleteById(inputPost.getId());
+
+    		userRepo.saveAll(fans);
+    		
+    		inputPost.setCreatedAt(Instant.now());
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(newPost);
+        }
+        return responseObj;
+    }
     
     public ResponseService findPostByUserId(IdObjectEntity inputUserId) {
         ResponseService responseObj = new ResponseService();
