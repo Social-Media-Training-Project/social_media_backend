@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.smb.entity.CommentEntity;
 
 @Repository
-public interface CommentsRepo extends MongoRepository<CommentEntity, String> {
+public interface CommentRepo extends MongoRepository<CommentEntity, String> {
     
 }
 

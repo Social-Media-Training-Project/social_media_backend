@@ -5,14 +5,32 @@ import java.time.Instant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="comments")
+@Document(collection="comment")
 public class CommentEntity {
 	@Id
     private String id;
+
     private String userId;
-	private String postId;
+
+    private String userFullname;
+
     private String content;
-    private String createdAt;
+
+    private Instant createdAt;
+
+	public CommentEntity(String id, String userId, String userFullname, String content, Instant createdAt) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.userFullname = userFullname;
+		this.content = content;
+		this.createdAt = createdAt;
+	}
+
+	public CommentEntity() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getId() {
 		return id;
@@ -30,12 +48,12 @@ public class CommentEntity {
 		this.userId = userId;
 	}
 
-	public String getPostId() {
-		return postId;
+	public String getUserFullname() {
+		return userFullname;
 	}
 
-	public void setPostId(String postId) {
-		this.postId = postId;
+	public void setUserFullname(String userFullname) {
+		this.userFullname = userFullname;
 	}
 
 	public String getContent() {
@@ -46,25 +64,15 @@ public class CommentEntity {
 		this.content = content;
 	}
 
-	public String getCreatedAt() {
+	public Instant getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(Instant createdAt) {
 		this.createdAt = createdAt;
 	}
+    
 
-	public CommentEntity(String id, String userId, String postId, String content, String createdAt) {
-		this.id = id;
-		this.userId = userId;
-		this.postId = postId;
-		this.content = content;
-		this.createdAt = createdAt;
-	}
-
-	public CommentEntity() {
-		super();
-	}
 }
 
 

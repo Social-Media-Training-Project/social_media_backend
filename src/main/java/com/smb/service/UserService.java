@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +47,6 @@ public class UserService implements UserDetailsService {
             responseObj.setMessage("UserName address " + inputUser.getUserName() + " existed");
             responseObj.setPayload(null);
         } else {
-            inputUser.setCreatedAt(Instant.now().toString());
             inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
             UserEntity user = userRepo.save(inputUser);
             List<String> fans = user.getFans();
@@ -87,7 +86,9 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("Cannot find user with userName: " + userName);
         } else {
             UserEntity foundUser = optUser.get();
+            String role = foundUser.getRole();
             Set<GrantedAuthority> ga = new HashSet<>();
+            ga.add(new SimpleGrantedAuthority(role));
             springUser = new User(foundUser.getUserName(), foundUser.getPassword(), ga);
             return springUser;
         }
