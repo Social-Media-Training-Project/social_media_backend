@@ -8,4 +8,3 @@ import com.smb.entity.CommentEntity;
 public interface CommentRepo extends MongoRepository<CommentEntity, String> {
     
 }
-

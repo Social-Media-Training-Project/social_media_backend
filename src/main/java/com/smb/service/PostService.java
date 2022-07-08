@@ -35,6 +35,7 @@ public class PostService {
             responseObj.setPayload(null);
         }
     	else {
+            inputPost.setCreatedAt(Instant.now().toString());
     		PostEntity newPost = postRepo.save(inputPost);
     		List<String> fansId =  optThisUser.get().getFans();
     		List<UserEntity> fans = (List<UserEntity>) userRepo.findAllById(fansId);
@@ -46,42 +47,6 @@ public class PostService {
     		});
 
     		userRepo.saveAll(fans);
-    		
-    		inputPost.setCreatedAt(Instant.now());
-            responseObj.setStatus("success");
-            responseObj.setMessage("success");
-            responseObj.setPayload(newPost);
-        }
-        return responseObj;
-    }
-
-    
-    public ResponseService deletePost(PostEntity inputPost) {
-    	
-    	ResponseService responseObj = new ResponseService();
-    	Optional<UserEntity> optThisUser = userRepo.findById(inputPost.getUserId());
-    	
-    	if(optThisUser.isEmpty()) {
-    		responseObj.setStatus("fail");
-            responseObj.setMessage("fail");
-            responseObj.setPayload(null);
-        }
-    	else {
-    		PostEntity newPost = postRepo.save(inputPost);
-    		List<String> fansId =  optThisUser.get().getFans();
-    		List<UserEntity> fans = (List<UserEntity>) userRepo.findAllById(fansId);
-    		
-    		fans.forEach(fan -> {
-    			List<String> fanFeed = fan.getUserFeed();
-    			fanFeed.remove(newPost.getId());
-    			fan.setUserFeed(fanFeed.stream().distinct().collect(Collectors.toList()));
-    		});
-    		
-    		postRepo.deleteById(inputPost.getId());
-
-    		userRepo.saveAll(fans);
-    		
-    		inputPost.setCreatedAt(Instant.now());
             responseObj.setStatus("success");
             responseObj.setMessage("success");
             responseObj.setPayload(newPost);
@@ -89,12 +54,12 @@ public class PostService {
         return responseObj;
     }
     
-    public ResponseService findPostByUserId(IdObjectEntity inputUserId) {
+    public ResponseService findPostByUserId(String inputUserId) {
         ResponseService responseObj = new ResponseService();
-        Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId.getId());
+        Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId);
         if (userPostsOpt.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find any post from user id: " + inputUserId.getId());
+            responseObj.setMessage("cannot find any post from user id: " + inputUserId);
             responseObj.setPayload(null);
             return responseObj;
         } else {
@@ -105,7 +70,7 @@ public class PostService {
             return responseObj;
         }
     }
-    public ResponseService updatePostByComment(PostEntity inputPost) {
+    public ResponseService updatePostByComments(PostEntity inputPost) {
         ResponseService responseObj = new ResponseService();
         Optional<PostEntity> optPost = postRepo.findById(inputPost.getId());
         if (optPost.isEmpty()) {
@@ -122,7 +87,7 @@ public class PostService {
             return responseObj;
         }
     }
-    public ResponseService updatePostByLove(DoubleIdObjectEntity doubleId) {
+    public ResponseService updatePostByLoves(DoubleIdObjectEntity doubleId) {
         // id 1 - post Id, id 2 - user who liked post
         ResponseService responseObj = new ResponseService();
         Optional<PostEntity> optPost = postRepo.findById(doubleId.getOtherAcc());
@@ -133,54 +98,20 @@ public class PostService {
             return responseObj;
         } else {
             PostEntity targetPost = optPost.get();
-            List<String> loveList = targetPost.getLove();
-            if (loveList == null) {
-                loveList = new ArrayList<>();
+            List<String> lovesList = targetPost.getLoves();
+            if (lovesList == null) {
+                lovesList = new ArrayList<>();
             }
-            // love and unlove a post
-            if (!loveList.contains(doubleId.getThisAcc())) {
-                loveList.add(doubleId.getThisAcc());
+            // loves and unloves a post
+            if (!lovesList.contains(doubleId.getThisAcc())) {
+                lovesList.add(doubleId.getThisAcc());
             } else {
-                loveList.remove(doubleId.getThisAcc());
+                lovesList.remove(doubleId.getThisAcc());
             }
-            targetPost.setLove(loveList);
+            targetPost.setLoves(lovesList);
             postRepo.save(targetPost);
             responseObj.setStatus("success");
-            responseObj.setMessage("update love to the target post id: " + targetPost.getId());
-            responseObj.setPayload(targetPost);
-            return responseObj;
-        }
-    }
-    public ResponseService updatePostByShare(DoubleIdObjectEntity doubleId) {
-        // id 1 - post Id, id 2 - user who shared post
-        ResponseService responseObj = new ResponseService();
-        Optional<PostEntity> optPost = postRepo.findById(doubleId.getOtherAcc());
-        if (optPost.isEmpty()) {
-            responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find post id: " + doubleId.getOtherAcc());
-            responseObj.setPayload(null);
-            return responseObj;
-        } else {
-            PostEntity targetPost = optPost.get();
-            List<String> shareList = targetPost.getShare();
-            if (shareList == null) {
-                shareList = new ArrayList<>();
-            }
-            // save id of user who shared the post then update post
-            shareList.add(doubleId.getThisAcc());
-            //targetPost.setShare(shareList);
-            postRepo.save(targetPost);
-             //update post list of user who shared the post
-            targetPost.setUserId(doubleId.getThisAcc());
-            targetPost.setId(null);
-            targetPost.setContent("Shared a post: " + targetPost.getContent());
-            targetPost.setLove(new ArrayList<>());
-            targetPost.setShare(new ArrayList<>());
-            targetPost.setComment(new ArrayList<>());
-            postRepo.save(targetPost);
-
-            responseObj.setStatus("success");
-            responseObj.setMessage("add a share to the target post id: " + targetPost.getId());
+            responseObj.setMessage("update loves to the target post id: " + targetPost.getId());
             responseObj.setPayload(targetPost);
             return responseObj;
         }
