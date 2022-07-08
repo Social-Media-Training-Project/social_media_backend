@@ -4,9 +4,12 @@ import com.smb.entity.DoubleIdObjectEntity;
 import com.smb.entity.IdObjectEntity;
 import com.smb.entity.PostEntity;
 import com.smb.entity.UserEntity;
+import com.smb.entity.UserSignInEntity;
 import com.smb.repo.PostRepo;
 import com.smb.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -255,6 +258,64 @@ public class UserService implements UserDetailsService {
         
 		return responseObj;
     }
-
+    
+    public ResponseService updateUser(UserEntity inputUser) {
+        ResponseService responseObj = new ResponseService();
+    	
+    	Optional<UserEntity> optUser = userRepo.findById(inputUser.getId());
+        if (optUser.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user id: " + inputUser.getId() + " not existed");
+            responseObj.setPayload(null);
+        }
+        else {
+        	UserEntity currentUser = optUser.get();
+            if (bCryptEncoder.matches(inputUser.getPassword(), currentUser.getPassword())) {
+                inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
+                UserEntity user = userRepo.save(inputUser);
+                user.setPassword("");
+                responseObj.setPayload(user);
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+            } else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("current password is not correct");
+                responseObj.setPayload(null);
+            }
+        }
+        
+        return responseObj;
+    }
+    
+    
+    public ResponseService deleteUser(UserSignInEntity inputUser){
+        ResponseService responseObj = new ResponseService();
+        
+    	Optional<UserEntity> optUser = userRepo.findByUserName(inputUser.getUserName());
+        
+    	
+    	if (!optUser.isPresent()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user name : " + inputUser.getUserName() + " not existed");
+            responseObj.setPayload(null);
+        }
+        else {
+        	UserEntity currentUser = optUser.get();
+            if (bCryptEncoder.matches(inputUser.getPassword(), currentUser.getPassword())) {
+            	currentUser.setPassword(bCryptEncoder.encode(bCryptEncoder.encode(inputUser.getPassword())));
+            	currentUser.setUserName("Deleted user");
+                userRepo.save(currentUser);
+                responseObj.setPayload("User Deleted");
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+            } else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("current password is not correct");
+                responseObj.setPayload(null);
+            }
+        }
+        
+        return responseObj;
+    }
 
 }

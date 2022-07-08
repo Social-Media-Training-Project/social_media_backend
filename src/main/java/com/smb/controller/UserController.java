@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,4 +82,16 @@ public class UserController {
     public ResponseEntity<ResponseService> getUserFeed(@PathVariable("userId") String userId) {
         return new ResponseEntity<ResponseService>(userService.getUserFeed(userId), HttpStatus.OK);
     }
+    
+    @PutMapping("/users")
+    public ResponseEntity<ResponseService> updateUser(@RequestBody  UserEntity inputUser ){
+        return new ResponseEntity<ResponseService>(userService.updateUser(inputUser), HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/users")
+    public ResponseEntity<ResponseService> deleteUser(@RequestBody UserSignInEntity inputUser ){
+        return new ResponseEntity<ResponseService>(userService.deleteUser(inputUser), HttpStatus.OK);
+    }
+    
+    
 }
