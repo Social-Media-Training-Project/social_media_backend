@@ -115,9 +115,12 @@ public class UserService implements UserDetailsService {
         ResponseService responseObj = new ResponseService();
         Optional<UserEntity> optOtherAccUser = userRepo.findById(doubleId.getOtherAcc());
         Optional<UserEntity> optThisAccUser = userRepo.findById(doubleId.getThisAcc());
-        if (optOtherAccUser.isEmpty() || optThisAccUser.isEmpty()) {
+        if (optOtherAccUser.isEmpty() || optThisAccUser.isEmpty() || doubleId.getThisAcc().equals(doubleId.getOtherAcc())) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("invalid user id");
+            String msg = "invalid user id";
+            if(doubleId.getThisAcc().equals(doubleId.getOtherAcc()))
+                msg = "cannot follow yourself";
+            responseObj.setMessage(msg);
             responseObj.setPayload(null);
         } else {
             UserEntity otherAccUser = optOtherAccUser.get();
@@ -187,8 +190,16 @@ public class UserService implements UserDetailsService {
             if (godsList == null) {
                 godsList = new ArrayList<>();
             }
-            godsList.remove(otherAccUser.getId());
-            thisAccUser.setGods(godsList);
+            if (godsList.contains(otherAccUser.getId())) {
+                godsList.remove(otherAccUser.getId());
+                thisAccUser.setGods(godsList);
+            }
+            else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("cannot unfollow a user you are not following");
+                responseObj.setPayload(null);
+            }
+
 
             List<String> thisAccFeed = thisAccUser.getUserFeed();
             if (thisAccFeed == null) {
