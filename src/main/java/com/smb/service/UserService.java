@@ -234,7 +234,27 @@ public class UserService implements UserDetailsService {
         }
         return responseObj;
     }
-
+    
+    public ResponseService getUserFeed(String userId) {
+        ResponseService responseObj = new ResponseService();
+        Optional<UserEntity> optUser = userRepo.findById(userId);
+        
+        if(optUser.isEmpty()) {
+        	responseObj.setStatus("fail");
+            responseObj.setMessage("invalid user id");
+            responseObj.setPayload(null);
+        }
+        else {
+        	UserEntity user = optUser.get();
+        	List<String> userFeedId = user.getUserFeed();
+        	List<PostEntity> userFeedPopulated = postRepo.findAll();
+        	responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(userFeedPopulated);
+        }
+        
+		return responseObj;
+    }
 
 
 }
