@@ -48,6 +48,7 @@ public class PostService {
     		userRepo.saveAll(fans);
     		
     		inputPost.setCreatedAt(Instant.now());
+
             responseObj.setStatus("success");
             responseObj.setMessage("success");
             responseObj.setPayload(newPost);

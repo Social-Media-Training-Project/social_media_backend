@@ -18,7 +18,6 @@ import com.smb.service.ResponseService;
 @RestController
 @RequestMapping("/api/")
 @CrossOrigin(origins = "*")
-
 public class CommentController {
     @Autowired
     private CommentService commentService;
