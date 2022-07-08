@@ -75,5 +75,9 @@ public class UserController {
     public ResponseEntity<ResponseService> unfollowUser(@RequestBody DoubleIdObjectEntity doubleId) {
         return new ResponseEntity<ResponseService>(userService.unfollowUser(doubleId), HttpStatus.OK);
     }
-
+    
+    @GetMapping("/users/feed/{userId}")
+    public ResponseEntity<ResponseService> getUserFeed(@PathVariable("userId") String userId) {
+        return new ResponseEntity<ResponseService>(userService.getUserFeed(userId), HttpStatus.OK);
+    }
 }
