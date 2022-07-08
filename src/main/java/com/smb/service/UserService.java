@@ -1,9 +1,6 @@
 package com.smb.service;
 
-import com.smb.entity.DoubleIdObjectEntity;
-import com.smb.entity.IdObjectEntity;
-import com.smb.entity.PostEntity;
-import com.smb.entity.UserEntity;
+import com.smb.entity.*;
 import com.smb.repo.PostRepo;
 import com.smb.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,6 +227,75 @@ public class UserService implements UserDetailsService {
             responseObj.setMessage(
                     "User id " + thisAccUser.getId() + " successfully UNfollowed user id " + otherAccUser.getId());
             responseObj.setPayload(new IdObjectEntity(doubleId.getOtherAcc()));
+        }
+        return responseObj;
+    }
+
+    public ResponseService getUserFeed(String userId) {
+        ResponseService responseObj = new ResponseService();
+        Optional<UserEntity> optUser = userRepo.findById(userId);
+        if(optUser.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("invalid user id");
+            responseObj.setPayload(null);
+        }
+        else {
+            UserEntity user = optUser.get();
+            List<String> userFeedId = user.getUserFeed();
+            List<PostEntity> userFeedPopulated = postRepo.findAll();
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(userFeedPopulated);
+        }
+        return responseObj;
+    }
+    public ResponseService updateUser(UserEntity inputUser) {
+        ResponseService responseObj = new ResponseService();
+        Optional<UserEntity> optUser = userRepo.findById(inputUser.getId());
+        if (optUser.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user id: " + inputUser.getId() + " not existed");
+            responseObj.setPayload(null);
+        }
+        else {
+            UserEntity currentUser = optUser.get();
+            if (bCryptEncoder.matches(inputUser.getPassword(), currentUser.getPassword())) {
+                inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
+                UserEntity user = userRepo.save(inputUser);
+                user.setPassword("");
+                responseObj.setPayload(user);
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+            } else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("current password is not correct");
+                responseObj.setPayload(null);
+            }
+        }
+        return responseObj;
+    }
+    public ResponseService deleteUser(UserSignInEntity inputUser){
+        ResponseService responseObj = new ResponseService();
+        Optional<UserEntity> optUser = userRepo.findByUserName(inputUser.getUserName());
+        if (!optUser.isPresent()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user name : " + inputUser.getUserName() + " not existed");
+            responseObj.setPayload(null);
+        }
+        else {
+            UserEntity currentUser = optUser.get();
+            if (bCryptEncoder.matches(inputUser.getPassword(), currentUser.getPassword())) {
+                currentUser.setPassword(bCryptEncoder.encode(bCryptEncoder.encode(inputUser.getPassword())));
+                currentUser.setUserName("Deleted user");
+                userRepo.save(currentUser);
+                responseObj.setPayload("User Deleted");
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+            } else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("current password is not correct");
+                responseObj.setPayload(null);
+            }
         }
         return responseObj;
     }
