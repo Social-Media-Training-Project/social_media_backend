@@ -28,7 +28,6 @@ import com.smb.service.UserService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class UserController {
 	@Autowired
     private UserService userService;
